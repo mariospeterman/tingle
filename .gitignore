@@ -1,1 +1,64 @@
-node_modules
+/node_modules
+/.next
+/out
+
+# Environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# npm debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# macOS
+.DS_Store
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.sock
+
+# Build results
+dist
+build
+
+# Dependency logs
+next-env.d.ts
+
+# optional npm cache
+.npm
+
+# optional pnpm lockfile
+pnpm-lock.yaml
+
+# Production environment variables
+.env.production
+
+# Testing
+/coverage
+
+# Misc
+*.swp
+.fuse_hidden*
+~*
+
+# Mediasoup
+mediasoup-worker*
+
+# ngrok (if used for local testing)
+ngrok
+ngrok.yml
+*.zip
