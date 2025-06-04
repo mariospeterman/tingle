@@ -1,0 +1,294 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Tingle Project Rules & Architecture
+
+## 1. Project Overview
+Tingle is a Telegram WebApp that enables real-time video chat matching with integrated TON blockchain features.
+
+### Core Features
+- Real-time video chat matching
+- TON wallet integration for payments/tips
+- Profile management and preferences
+- Live streaming preparation UI
+- Real-time chat and media sharing
+
+## 2. Technical Stack & Versions
+
+```json
+{
+  "dependencies": {
+    "@twa-dev/sdk": "^6.9.1",
+    "@tonconnect/sdk": "^2.0.0",
+    "@tonconnect/ui-react": "^2.0.0",
+    "mediasoup-client": "^3.6.98",
+    "mediasoup": "^3.12.20",
+    "next": "14.1.0",
+    "react": "^18.2.0",
+    "redis": "^4.6.13",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.7.4",
+    "@supabase/supabase-js": "^2.39.3",
+    "zustand": "^4.5.0",
+    "framer-motion": "^11.0.3",
+    "tailwindcss": "^3.3.0"
+  }
+}
+```
+
+## 3. Project Structure
+
+```
+/tingle
+├── /app
+│   ├── /components
+│   │   ├── /PreCallSetup
+│   │   │   ├── ProfileSettings.tsx
+│   │   │   ├── StreamPreview.tsx
+│   │   │   └── DeviceSettings.tsx
+│   │   ├── /VideoChat
+│   │   │   ├── VideoGrid.tsx
+│   │   │   ├── ChatPanel.tsx
+│   │   │   └── Controls.tsx
+│   │   ├── /WalletConnect
+│   │   │   ├── TONConnect.tsx
+│   │   │   └── PaymentModal.tsx
+│   │   └── /Matchmaking
+│   │       ├── MatchingUI.tsx
+│   │       └── MatchFound.tsx
+│   ├── /hooks
+│   │   ├── useMediaSoup.ts
+│   │   ├── useMatchmaking.ts
+│   │   └── useWallet.ts
+│   ├── /lib
+│   │   ├── mediasoup.ts
+│   │   ├── redis.ts
+│   │   └── matching.ts
+│   └── /pages
+│       └── twa.tsx
+├── /contracts
+│   └── /ton
+│       ├── TinglePayment.ts
+│       └── TingleSubscription.ts
+└── /public
+    └── tonconnect-manifest.json
+```
+
+## 4. UI/UX Design Guidelines
+
+### Main App Flow (twa.tsx)
+1. **Welcome Screen**
+   - Telegram user profile import
+   - First-time setup wizard
+   - Camera/microphone permissions
+   - Profile customization
+
+2. **PreCall UI**
+   - Live stream preview
+   - Device settings
+   - Profile settings
+   - Matching preferences
+
+3. **Matching UI**
+   - Persistent camera view
+   - Matching animation
+   - Connection status
+   - Cancel option
+
+4. **Video Chat UI**
+   - Video grid
+   - Chat panel
+   - Controls (mute, camera, end)
+   - TON wallet integration
+
+### Design Principles
+- Follow Telegram's design language
+- Use Telegram's color scheme
+- Implement smooth transitions
+- Ensure responsive design
+- Support dark/light modes
+
+## 5. Core Services Integration
+
+### Telegram WebApp Integration
+```typescript
+// app/lib/telegram.ts
+import { WebApp } from '@twa-dev/sdk';
+
+export const initTelegramApp = () => {
+  WebApp.ready();
+  WebApp.expand();
+  WebApp.enableClosingConfirmation();
+};
+```
+
+### TON Connect Integration
+```typescript
+// app/lib/ton.ts
+import { TonConnect } from '@tonconnect/sdk';
+import { TonConnectUI } from '@tonconnect/ui-react';
+
+export const initTONConnect = () => {
+  const connector = new TonConnect({
+    manifestUrl: 'https://your-app.com/tonconnect-manifest.json'
+  });
+  
+  return new TonConnectUI({ connector });
+};
+```
+
+### MediaSoup Integration
+```typescript
+// app/lib/mediasoup.ts
+import { Device } from 'mediasoup-client';
+
+export const initMediaSoup = async () => {
+  const device = new Device();
+  // ... MediaSoup initialization
+};
+```
+
+### Redis Integration
+```typescript
+// app/lib/redis.ts
+import { createClient } from 'redis';
+
+export const initRedis = () => {
+  return createClient({
+    url: process.env.REDIS_URL
+  });
+};
+```
+
+## 6. State Management
+
+### Global State (Zustand)
+```typescript
+// app/store/index.ts
+import create from 'zustand';
+
+interface AppState {
+  user: User | null;
+  match: Match | null;
+  settings: UserSettings;
+  // ... other state
+}
+
+export const useStore = create<AppState>((set) => ({
+  // ... state implementation
+}));
+```
+
+## 7. Real-time Communication
+
+### WebSocket Events
+```typescript
+// app/lib/socket.ts
+export const SOCKET_EVENTS = {
+  MATCH_START: 'match:start',
+  MATCH_FOUND: 'match:found',
+  MATCH_END: 'match:end',
+  CHAT_MESSAGE: 'chat:message',
+  MEDIA_STREAM: 'media:stream',
+  // ... other events
+};
+```
+
+## 8. Database Schema (Supabase)
+
+```sql
+-- Users table
+CREATE TABLE users (
+  id UUID PRIMARY KEY,
+  telegram_id TEXT UNIQUE,
+  username TEXT,
+  profile_image TEXT,
+  preferences JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Matches table
+CREATE TABLE matches (
+  id UUID PRIMARY KEY,
+  user1_id UUID REFERENCES users(id),
+  user2_id UUID REFERENCES users(id),
+  status TEXT,
+  started_at TIMESTAMP WITH TIME ZONE,
+  ended_at TIMESTAMP WITH TIME ZONE
+);
+
+-- Payments table
+CREATE TABLE payments (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES users(id),
+  amount DECIMAL,
+  currency TEXT,
+  status TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
+
+## 9. Environment Configuration
+
+```env
+# Telegram
+NEXT_PUBLIC_TELEGRAM_BOT_TOKEN=your_bot_token
+NEXT_PUBLIC_TELEGRAM_WEBAPP_URL=your_webapp_url
+
+# TON
+NEXT_PUBLIC_TON_CONNECT_MANIFEST_URL=your_manifest_url
+
+# MediaSoup
+MEDIASOUP_MIN_PORT=10000
+MEDIASOUP_MAX_PORT=10100
+MEDIASOUP_LISTEN_IP=0.0.0.0
+MEDIASOUP_ANNOUNCED_IP=your_server_ip
+
+# Redis
+REDIS_URL=redis://localhost:6379
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
+```
+
+## 10. Development Workflow
+
+1. **Local Development**
+   ```bash
+   pnpm install
+   pnpm dev
+   ```
+
+2. **Testing**
+   ```bash
+   pnpm test
+   pnpm test:e2e
+   ```
+
+3. **Deployment**
+   ```bash
+   pnpm build
+   pnpm start
+   ```
+
+## 11. Security Considerations
+
+- Implement rate limiting
+- Validate all user inputs
+- Secure WebSocket connections
+- Encrypt sensitive data
+- Implement proper error handling
+- Use HTTPS for all communications
+
+## 12. Performance Optimization
+
+- Implement lazy loading
+- Use image optimization
+- Implement proper caching
+- Optimize WebRTC connections
+- Use proper error boundaries
+- Implement proper cleanup
+

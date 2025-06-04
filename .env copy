@@ -1,0 +1,44 @@
+# Telegram Bot Configuration
+NEXT_PUBLIC_TELEGRAM_BOT_TOKEN=7330175445:AAEbB7A51QdPh-wJcng09l5bx9UC9kOIP-I
+NEXT_PUBLIC_TELEGRAM_BOT_USERNAME=TingleTonBot   # e.g. mybot
+
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://bucoqaoiekcxvdfmbcqm.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1Y29xYW9pZWtjeHZkZm1iY3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg4NzAyOTgsImV4cCI6MjA2NDQ0NjI5OH0.oueH4utHMEt89mdF1Je5rDqfVzmn3X3cKE5Ejau4DW8
+NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1Y29xYW9pZWtjeHZkZm1iY3FtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODg3MDI5OCwiZXhwIjoyMDY0NDQ2Mjk4fQ.G5aXgF9627gR5YBeYUxgGrNkQ2z3eTwSgAgyVThLWFM
+SUPABASE_JWT_SECRET=R43C/uk8G/2pTkUhxQ8S2jafgalED8ez+TaIK/FzfZqfE4KqlNphhfwdCRhy703GJxWOrCII/8M5dDeT7l271g==
+
+# Database URL (get this from your Supabase project settings -> Database -> Connection string -> URI)
+DATABASE_URL=postgresql://postgres:Brat2.71828182846@db.bucoqaoiekcxvdfmbcqm.supabase.co:5432/postgres
+
+# TON Network Configuration
+NEXT_PUBLIC_TON_NETWORK=testnet
+NEXT_PUBLIC_TON_API_KEY=d43682d6388ba1ff18e4a3d5f04edbaafa74d5623df1bc485aa4fa1b159078f0
+NEXT_PUBLIC_TON_CONNECT_MANIFEST_URL= https://075e-2003-cc-4f33-35fc-85bf-e49c-d89d-de7e.ngrok-free.app/tonconnect-manifest.json
+
+# Redis Configuration
+NEXT_PUBLIC_REDIS_URL=redis-15456.c293.eu-central-1-1.ec2.redns.redis-cloud.com:15456
+NEXT_PUBLIC_REDIS_PASSWORD=aoYkr3lXPvPgd6Iqxj9yaF1VY7QSQR92
+REDIS_TLS_ENABLED=true
+
+
+   # Server Configuration
+   NODE_ENV=development
+   LISTEN_PORT=3000
+   MEDIASOUP_LISTEN_IP=0.0.0.0
+   MEDIASOUP_ANNOUNCED_IP=127.0.0.1
+
+   # Mediasoup Configuration
+   MEDIASOUP_MIN_PORT=10000
+   MEDIASOUP_MAX_PORT=10100
+   MEDIASOUP_NUM_WORKERS=1
+
+   # SFU Configuration
+   SFU_PUBLIC_IP=127.0.0.1
+   SERVER_HOST_URL=http://localhost:3000
+
+   # Client Configuration
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   NEXT_PUBLIC_MEDIASOUP_SERVER_URL=ws://localhost:3000NV=development
+
+NEXT_PUBLIC_SOCKET_URL=https://075e-2003-cc-4f33-35fc-85bf-e49c-d89d-de7e.ngrok-free.app
